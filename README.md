@@ -84,6 +84,18 @@ flask run
 
 Follow the scripts in `scripts/` or [Driftsätta en flask app](https://dbwebb.se/kunskap/driftsatta-en-flask-app).
 
+## Docker
+
+Production
+```
+docker-compose up prod
+```
+
+Test
+```
+docker-compose up test
+```
+
 ## License
 
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
