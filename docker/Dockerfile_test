@@ -4,10 +4,7 @@ RUN adduser -D microblog
 
 WORKDIR /home/microblog
 
-COPY requirements.txt requirements.txt
-COPY requirements requirements
-COPY .pylintrc .pylintrc
-COPY Makefile Makefile
+COPY . ./
 
 RUN python -m venv venv
 
