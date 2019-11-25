@@ -6,6 +6,7 @@ WORKDIR /home/microblog
 
 COPY requirements.txt requirements.txt
 COPY requirements requirements
+COPY Makefile Makefile
 
 RUN python -m venv venv
 
