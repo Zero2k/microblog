@@ -5,6 +5,7 @@ RUN adduser -D microblog
 WORKDIR /home/microblog
 
 COPY . .
+COPY Makefile /home/microblog
 
 RUN python -m venv venv
 
