@@ -3,7 +3,6 @@ version: "3"
 services:
     db:
         image: mysql/mysql-server:5.7
-        container_name: "database"
         environment:
             - MYSQL_DATABASE=microblog
             - MYSQL_USER=microblog
@@ -30,18 +29,18 @@ services:
           context: .
         container_name: "microblog-production"
         links:
-          - "db:database"
+          - db
         ports:
             - 8000:5000
         environment:
             - SECRET_KEY=production
-            - DATABASE_URL=mysql+pymysql://microblog:microblog@database:3306/microblog
+            - DATABASE_URL=mysql+pymysql://microblog:microblog@db:3306/microblog
         restart:
             "always"
 
     test:
         build:
-          dockerfile: ./docker/Dockerfile_test
+          dockerfile: docker/Dockerfile_test
           context: .
         container_name: "microblog-test"
         links:
