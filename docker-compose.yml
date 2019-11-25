@@ -42,9 +42,11 @@ services:
 
     test:
         build:
-          dockerfile: docker/Dockerfile_test
+          dockerfile: ./docker/Dockerfile_test
           context: .
         container_name: "microblog-test"
+        links:
+          - "db-test:database-test"
         environment:
             - SECRET_KEY=test
             - DATABASE_URL=mysql+pymysql://test:test@database-test:3306/test
