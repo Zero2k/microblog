@@ -14,7 +14,11 @@ jobs:
       - setup_remote_docker
       - run:
           name: Run tests with docker
-          command: make test
+          command: |
+            sudo apt-get install python3-venv
+            python3 -m venv venv
+            . venv/bin/activate
+            make test
   build:
     executor: docker-publisher
     steps:
