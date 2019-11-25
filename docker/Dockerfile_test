@@ -4,6 +4,7 @@ RUN adduser -D microblog
 
 WORKDIR /home/microblog
 
+COPY . .
 COPY requirements.txt requirements.txt
 COPY requirements requirements
 COPY Makefile /home/microblog
