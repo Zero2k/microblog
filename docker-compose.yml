@@ -15,7 +15,6 @@ services:
 
     db-test:
         image: mysql/mysql-server:5.7
-        container_name: "database-test"
         environment:
             - MYSQL_DATABASE=test
             - MYSQL_USER=test
@@ -46,7 +45,7 @@ services:
           context: .
         container_name: "microblog-test"
         links:
-          - "db-test:database-test"
+          - db-test
         environment:
             - SECRET_KEY=test
-            - DATABASE_URL=mysql+pymysql://test:test@database-test:3306/test
+            - DATABASE_URL=mysql+pymysql://test:test@db-test:3306/test
