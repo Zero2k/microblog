@@ -7,6 +7,8 @@ services:
             - MYSQL_DATABASE=microblog
             - MYSQL_USER=microblog
             - MYSQL_PASSWORD=microblog
+        volumes:
+          - ./db:/var/lib/mysql
         restart:
             "always"
         expose:
