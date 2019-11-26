@@ -24,10 +24,7 @@ services:
           - "3306"
 
     prod:
-        build: 
-          dockerfile: docker/Dockerfile_prod
-          context: .
-        container_name: "microblog-production"
+        image: zero2k/microblog:latest
         links:
           - db
         ports:
