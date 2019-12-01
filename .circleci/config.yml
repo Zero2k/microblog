@@ -66,6 +66,26 @@ jobs:
             docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
             docker push $IMAGE_NAME:latest
             docker push $IMAGE_NAME:$IMAGE_TAG
+  deploy-aws:
+    executor: docker-publisher
+    working_directory: ~/microblog
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get install python3-venv
+            python3 -m venv venv
+      - run: echo "source ~/microblog/venv/bin/activate" >> $BASH_ENV
+      - run:
+          name: Install deploy dependencies
+          command: pip3 install -r requirements/deploy.txt
+      - run:
+          name: Run appServer playbook
+          command: |
+              . ../venv/bin/activate
+              ansible-playbook gather_aws_instances.yml appServer.yml
+          working_directory: ansible
 
 workflows:
   version: 2
@@ -86,6 +106,12 @@ workflows:
           context: DOCKERHUB
           requires:
             - build
+          filters:
+            branches:
+              only: master
+      - deploy-aws:
+          requires:
+            - publish-latest
           filters:
             branches:
               only: master

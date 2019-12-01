@@ -1,0 +1,12 @@
+---
+- import_tasks: install_docker.yml
+
+- name: Create the docker container with microblog
+  docker_container:
+      name: microblog
+      image: zero2k/microblog:latest
+      ports:
+          - '8000:5000'
+      restart: yes
+      env:
+          DATABASE_URL: 'mysql+pymysql://microblog:12345@{{ groups.database[0] }}:3306/microblog'

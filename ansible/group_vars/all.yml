@@ -3,4 +3,5 @@
 
 region: us-east-1
 project_name: devops
-domain_name: <insert domain name>
+domain_name: carverpro.com
+admin_email: vibe16@student.bth.se

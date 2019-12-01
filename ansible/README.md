@@ -11,12 +11,19 @@ They also have a [best practice](https://docs.ansible.com/ansible/latest/user_gu
 
 First open `provision.yml` and replace `<subnet-id>` with a subnet-id from AWS.
 
-Use the command `ansible-playbook` to run playbooks.
+1. Start by copy AWS credentials (https://labs.vocareum.com/) to ENV with: `. insert_aws_keys_in_config.sh`
 
-To create servers use `ansible-playbook provision.yml`. PS open file and replace `<subnet-id>` with a subnet id from AWS.
+2. To create servers use `ansible-playbook provision.yml`
 
-To destroy servers use `ansible-playbook terminate_ec2.yml`.
+To configure each server, use:
 
+Application - `ansible-playbook gather_aws_instances.yml appServer.yml`
+
+Database - `ansible-playbook gather_aws_instances.yml database.yml`
+
+LoadBalancer - `ansible-playbook gather_aws_instances.yml loadBalancer.yml`
+
+To destroy all the servers use `ansible-playbook terminate_ec2.yml`
 
 
 ### Structure
