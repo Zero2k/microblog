@@ -13,7 +13,7 @@ First open `provision.yml` and replace `<subnet-id>` with a subnet-id from AWS.
 
 1. Start by copy AWS credentials (https://labs.vocareum.com/) to ENV with: `. insert_aws_keys_in_config.sh`
 
-2. To create servers use `ansible-playbook provision.yml`
+2. To create servers use `ansible-playbook provision.yml or site.yml`
 
 To configure each server, use:
 
@@ -22,6 +22,8 @@ Application - `ansible-playbook gather_aws_instances.yml appServer.yml`
 Database - `ansible-playbook gather_aws_instances.yml database.yml`
 
 LoadBalancer - `ansible-playbook gather_aws_instances.yml loadBalancer.yml`
+
+Monitor - `ansible-playbook gather_aws_instances.yml monitor.yml`
 
 To destroy all the servers use `ansible-playbook terminate_ec2.yml`
 
@@ -32,13 +34,14 @@ To destroy all the servers use `ansible-playbook terminate_ec2.yml`
 
 We have 4 playbooks provision, terminate, gather_aws_instances, site.
 
-**provision** is used to create 3 servers on AWS. Uses the roles provision and security_groups. It also creates an elastic ip, connects it to the load balancer and to an domain name. 
+**provision** is used to create 4 servers on AWS. Uses the roles provision and security_groups. It also creates an elastic ip, connects it to the load balancer and to an domain name. 
 
 **gather_aws_instances** finds servers with the project name `devops` on AWS and adds them to hosts. After we have run this playbook we can use the following hosts in other playbooks: 
 - `devops` all three servers
 - `appServer` only the server for the app
 - `database` only for the database server
 - `loadBalancer` only the load balancer server
+- `monitor` only the monitor server
 
 **terminate_ec2** destroys all servers we have on AWS with the project name `devops` and destroys the elastic ip connected to the load balancer.
 

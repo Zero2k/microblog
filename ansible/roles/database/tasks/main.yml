@@ -1,5 +1,5 @@
 ---
-# - import_tasks: install_docker.yml
+- import_tasks: install_docker.yml
 
 - name: Create the docker container with MySQL
   docker_container:
@@ -10,3 +10,31 @@
       volumes:
           - "/var/lib/mysql:/var/lib/mysql"
       env: "{{ mysql_authentication }}"
+
+- name: Copy setup.sql
+  copy:
+    src: files/setup.sql
+    dest: /home/deploy/setup.sql
+    owner: deploy
+    group: deploy
+    mode: '0644'
+
+- name: Executing setup.sql on db docker container
+  shell: docker exec -i mysql mysql -uroot -proot < setup.sql
+
+- name: Pull docker image
+  command: docker pull prom/mysqld-exporter
+
+- name: Create exporter docker
+  command: |
+      docker run -d 
+      -p 9104:9104 
+      --network host 
+      -e DATA_SOURCE_NAME="exporter:{{ exporter_password }}@(localhost:3306)/"
+      --restart always
+      prom/mysqld-exporter:latest 
+      --collect.auto_increment.columns 
+      --collect.binlog_size 
+      --collect.engine_innodb_status 
+      --collect.engine_tokudb_status 
+      --collect.global_status
