@@ -6,8 +6,7 @@
       name: microblog
       image: zero2k/microblog:latest
       pull: yes
-      ports:
-          - '8000:5000'
+      network_mode: host
       restart: yes
       restart_policy: always
       env:
