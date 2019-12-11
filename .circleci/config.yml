@@ -128,7 +128,7 @@ workflows:
               ignore: /.*/
       - deploy-aws:
           requires:
-            - publish-latest
+            - publish-tag
           filters:
             tags:
               only: /^v.*/
