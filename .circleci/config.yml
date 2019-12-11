@@ -109,12 +109,6 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy-aws:
-          requires:
-            - publish-latest
-          filters:
-            branches:
-              only: master
   build-tags:
     jobs:
       - build:
@@ -127,6 +121,14 @@ workflows:
           context: DOCKERHUB
           requires:
             - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - deploy-aws:
+          requires:
+            - publish-latest
           filters:
             tags:
               only: /^v.*/

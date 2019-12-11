@@ -12,18 +12,17 @@
       env:
           DATABASE_URL: 'mysql+pymysql://microblog:12345@{{ groups.database[0] }}:3306/microblog'
 
-# - name: "Fetch image for statsd exporter gunicorn"
-#   command:
-#       docker pull prom/statsd-exporter
+- name: "Fetch image for statsd exporter gunicorn"
+  command:
+      docker pull prom/statsd-exporter
 
-# - name: Create statds config
-#   template:
-#     src: gunicorn.conf.j2
-#     dest: ~/statds.conf
-#     owner: deploy
-#     group: deploy
-#     mode: '0644'
+- name: Create statsd config
+  template:
+    src: statsd.conf.j2
+    dest: statsd.conf
+    owner: deploy
+    group: deploy
+    mode: '0644'
 
-# - name: Launch statsd exporter for gunicorn
-#   command:
-#       docker run -dP --net=host -v ${PWD}/statsd.conf:/statsd/statsd.conf prom/statsd-exporter "--statsd.mapping-config=/statsd/statsd.conf"
+- name: Launch statsd exporter for gunicorn
+  command: sudo docker run -dP --net=host -v ${PWD}/statsd.conf:/statsd/statsd.conf prom/statsd-exporter "--statsd.mapping-config=/statsd/statsd.conf"

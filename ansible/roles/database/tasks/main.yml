@@ -1,29 +1,29 @@
 ---
-- import_tasks: install_docker.yml
+# - import_tasks: install_docker.yml
 
-- name: Create the docker container with MySQL
-  docker_container:
-      name: mysql
-      image: mysql/mysql-server:5.7
-      ports:
-          - "3306:3306"
-      volumes:
-          - "/var/lib/mysql:/var/lib/mysql"
-      env: "{{ mysql_authentication }}"
+# - name: Create the docker container with MySQL
+#   docker_container:
+#       name: mysql
+#       image: mysql/mysql-server:5.7
+#       ports:
+#           - "3306:3306"
+#       volumes:
+#           - "/var/lib/mysql:/var/lib/mysql"
+#       env: "{{ mysql_authentication }}"
 
-- name: Copy setup.sql
-  copy:
-    src: files/setup.sql
-    dest: /home/deploy/setup.sql
-    owner: deploy
-    group: deploy
-    mode: '0644'
+# - name: Copy setup.sql
+#   copy:
+#     src: files/setup.sql
+#     dest: /home/deploy/setup.sql
+#     owner: deploy
+#     group: deploy
+#     mode: '0644'
 
-- name: Executing setup.sql on db docker container
-  shell: docker exec -i mysql mysql -uroot -proot < setup.sql
+# - name: Executing setup.sql on db docker container
+#   shell: docker exec -i mysql mysql -uroot -proot < setup.sql
 
-- name: Pull docker image
-  command: docker pull prom/mysqld-exporter
+# - name: Pull docker image
+#   command: docker pull prom/mysqld-exporter
 
 - name: Create exporter docker
   command: |

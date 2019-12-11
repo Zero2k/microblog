@@ -1,0 +1,93 @@
+---
+- name: Download node_exporter file
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz
+    dest: /tmp/
+    mode: '0440'
+
+- name: Add user to node_exporter
+  command: sudo useradd -rs /bin/false node_exporter
+
+- name: Extract node_exporter
+  unarchive:
+    src: /tmp/node_exporter-0.18.1.linux-amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: Create service
+  template:
+    src: node_exporter_template.j2
+    dest: /etc/systemd/system/node_exporter.service
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
+    mode: '0644'
+
+- name: Restart node_exporter and daemon-reload
+  systemd:
+    state: started
+    name: node_exporter
+    daemon_reload: yes
+    enabled: yes
+
+
+- name: Download prometheus file
+  get_url:
+    url: https://github.com/prometheus/prometheus/releases/download/v2.10.0/prometheus-2.10.0.linux-amd64.tar.gz
+    dest: /tmp/
+    mode: '0440'
+
+- name: Extract downloaded prometheus file
+  unarchive:
+    src: /tmp/prometheus-2.10.0.linux-amd64.tar.gz
+    dest: /etc/
+    creates: /etc/prometheus
+    remote_src: yes
+
+- name: Delete prometheus tmp folder
+  file:
+    path: '/tmp/prometheus-2.10.0.linux-amd64.tar.gz'
+    state: absent
+
+- name: Rename prometheus
+  command: mv /etc/prometheus-2.10.0.linux-amd64 /etc/prometheus
+
+- name: Copy prometheus config
+  template:
+    src: prometheus_template.j2
+    dest: /etc/prometheus/prometheus.yml
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
+    mode: '0644'
+
+- name: Start prometheus
+  command: sudo ./prometheus &
+
+
+- name: Download grafana files
+  get_url:
+    url: https://dl.grafana.com/oss/release/grafana_6.2.4_amd64.deb
+    dest: /tmp/
+    mode: '0440'
+
+- name: Install grafana
+  apt:
+    deb: /tmp/grafana_6.2.4_amd64.deb
+
+- name: Append to grafana.ini
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: '^;domain'
+    line: 'domain = carverpro.com'
+    state: present
+
+- name: Append to grafana.ini
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: '^;root_url'
+    line: 'root_url = %(protocol)s://%(domain)s/grafana/'
+    state: present
+
+- name: Start grafana service
+  service:
+    name: grafana-server
+    state: started
