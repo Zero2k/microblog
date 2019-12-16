@@ -21,8 +21,10 @@ RUN venv/bin/pip install gunicorn pymysql
 COPY app app
 COPY tests tests
 COPY migrations migrations
-COPY microblog.py .pylintrc test.sh ./
+COPY microblog.py .pylintrc test.sh .bandit.yml ./
+
 RUN chmod +x test.sh
+RUN chmod +x .bandit.yml
 
 ENV FLASK_APP microblog.py
 

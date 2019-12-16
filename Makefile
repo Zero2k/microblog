@@ -97,6 +97,13 @@ validate:
 
 
 
+# target: validate                     - Run bandit with config file
+.PHONY: bandit
+bandit:
+	bandit -c .bandit.yml -r app
+
+
+
 # target: test-integration             - Run tests in tests/integration with coverage.py
 .PHONY: test-integration
 test-integration: clean

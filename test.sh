@@ -8,6 +8,8 @@ while true; do
     echo db migration failed, retrying in 5 secs...
     sleep 5
 done
+
 pylint --rcfile=.pylintrc app tests
 python -m coverage run --rcfile=.coveragerc -m py.test -c pytest.ini tests/unit
 python -m coverage run --rcfile=.coveragerc -m py.test -c pytest.ini tests/integration
+bandit -c .bandit.yml -r app
