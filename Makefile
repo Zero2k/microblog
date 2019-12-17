@@ -104,6 +104,13 @@ bandit:
 
 
 
+# target: validate                     - Run bandit with config file
+.PHONY: zap
+zap:
+	@sudo docker run --net host owasp/zap2docker-weekly zap-baseline.py -t http://localhost:5000
+
+
+
 # target: test-integration             - Run tests in tests/integration with coverage.py
 .PHONY: test-integration
 test-integration: clean

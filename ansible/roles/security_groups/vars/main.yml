@@ -18,7 +18,7 @@
           - proto: tcp
             from_port: 9113
             to_port: 9113
-            cidr_ip: 0.0.0.0/0
+            cidr_ip: "{{ groups['monitoring'][0] }}/32"
         - name: app-server
           description: SG for the application server
           port_rules:
@@ -29,11 +29,11 @@
           - proto: tcp
             from_port: 9102
             to_port: 9102
-            cidr_ip: 0.0.0.0/0
+            cidr_ip: "{{ groups['monitoring'][0] }}/32"
           - proto: tcp
             from_port: 5000
             to_port: 5000
-            cidr_ip: 0.0.0.0/0
+            cidr_ip: "{{ groups['load-balancer'][0] }}/32"
         - name: database
           description: SG for the database node
           port_rules:
@@ -44,11 +44,11 @@
           - proto: tcp
             from_port: 3306
             to_port: 3306
-            cidr_ip: 0.0.0.0/0
+            cidr_ip: "{{ groups['app-server'][0] }}/32"
           - proto: tcp
             from_port: 9104
             to_port: 9104
-            cidr_ip: 0.0.0.0/0
+            cidr_ip: "{{ groups['monitoring'][0] }}/32"
         - name: monitoring
           description: SG for the monitoring node
           port_rules:

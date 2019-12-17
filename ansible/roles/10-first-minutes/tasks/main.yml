@@ -82,3 +82,11 @@
         state: absent
         force: yes
         remove: yes
+
+-   name: Replace sshd config
+    copy:
+        src: files/sshd_config
+        dest: /etc/ssh/sshd_config
+
+-   name: Reload sshd service
+    command: sudo service sshd restart
