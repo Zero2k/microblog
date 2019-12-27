@@ -38,6 +38,22 @@ jobs:
           root: .
           paths:
             - ./image.tar
+  build-kubernetes:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t $IMAGE_NAME-kubernetes:latest -f docker/Dockerfile_kubernetes .
+      - run:
+          name: Archive Docker image
+          command: docker save -o image_kubernetes.tar $IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image_kubernetes.tar
   publish-latest:
     executor: docker-publisher
     steps:
@@ -54,6 +70,20 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
+  publish-kubernetes:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image_kubernetes.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME-kubernetes:latest
   publish-tag:
     executor: docker-publisher
     steps:
@@ -125,10 +155,24 @@ workflows:
           filters:
             branches:
               only: master
+      - build-kubernetes:
+          context: DOCKERHUB
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
       - publish-latest:
           context: DOCKERHUB
           requires:
             - build
+          filters:
+            branches:
+              only: master
+      - publish-kubernetes:
+          context: DOCKERHUB
+          requires:
+            - build-kubernetes
           filters:
             branches:
               only: master
