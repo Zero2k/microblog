@@ -18,8 +18,8 @@
   template:
     src: node_exporter_template.j2
     dest: /etc/systemd/system/node_exporter.service
-    owner: "{{ server_user }}"
-    group: "{{ server_user }}"
+    owner: '{{ server_user }}'
+    group: '{{ server_user }}'
     mode: '0644'
 
 - name: Restart node_exporter and daemon-reload
@@ -28,7 +28,6 @@
     name: node_exporter
     daemon_reload: yes
     enabled: yes
-
 
 - name: Download prometheus file
   get_url:
@@ -55,13 +54,17 @@
   template:
     src: prometheus_template.j2
     dest: /etc/prometheus/prometheus.yml
-    owner: "{{ server_user }}"
-    group: "{{ server_user }}"
+    owner: '{{ server_user }}'
+    group: '{{ server_user }}'
     mode: '0644'
 
-- name: Start prometheus
-  command: sudo ./prometheus &
+- name: Kill prometheus service
+  command: sudo pkill prometheus
 
+- name: Start prometheus service
+  shell: nohup ./prometheus > prometheus.log 2>&1 &
+  args:
+    chdir: /etc/prometheus
 
 - name: Download grafana files
   get_url:
